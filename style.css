@@ -130,31 +130,24 @@ main {
   gap: 0.25rem;
 }
 
-/* --- Palette picker --- */
-.palette-options {
+/* --- Palette picker (dropdown + swatch preview) --- */
+.palette-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.palette-btn {
+.palette-row select {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.palette-preview {
   display: flex;
   gap: 3px;
-  padding: 4px 6px;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  background: #f5f5f5;
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.palette-btn:hover {
-  border-color: #aaa;
-}
-
-.palette-btn.active {
-  border-color: #0f3460;
-  box-shadow: 0 0 0 1px #0f3460;
+  align-items: center;
 }
 
 .pal-dot {
