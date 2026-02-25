@@ -48,15 +48,8 @@
       </fieldset>
 
       <div class="control-group">
-        <label for="palette-select">Colour Palette</label>
-        <select id="palette-select">
-          <option value="default">Default</option>
-          <option value="ocean">Ocean</option>
-          <option value="earth">Earth</option>
-          <option value="sunset">Sunset</option>
-          <option value="berry">Berry</option>
-          <option value="monochrome">Monochrome</option>
-        </select>
+        <label>Colour Palette</label>
+        <div id="palette-options" class="palette-options"></div>
       </div>
 
       <button id="fetch-btn">Fetch &amp; Visualise</button>
@@ -78,7 +71,8 @@
         <canvas id="main-chart"></canvas>
       </div>
       <div class="chart-toolbar">
-        <button id="download-btn">Download as PNG</button>
+        <button id="download-png-btn">Download PNG</button>
+        <button id="download-jpg-btn">Download JPEG</button>
       </div>
       <div id="status" class="status"></div>
       <div id="summary" class="summary"></div>
