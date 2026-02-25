@@ -47,6 +47,18 @@
         <label><input type="checkbox" value="T_MOWWO-4" checked> T_MOWWO-4</label>
       </fieldset>
 
+      <div class="control-group">
+        <label for="palette-select">Colour Palette</label>
+        <select id="palette-select">
+          <option value="default">Default</option>
+          <option value="ocean">Ocean</option>
+          <option value="earth">Earth</option>
+          <option value="sunset">Sunset</option>
+          <option value="berry">Berry</option>
+          <option value="monochrome">Monochrome</option>
+        </select>
+      </div>
+
       <button id="fetch-btn">Fetch &amp; Visualise</button>
     </section>
 
@@ -64,6 +76,9 @@
     <section class="chart-area">
       <div class="chart-container">
         <canvas id="main-chart"></canvas>
+      </div>
+      <div class="chart-toolbar">
+        <button id="download-btn">Download as PNG</button>
       </div>
       <div id="status" class="status"></div>
       <div id="summary" class="summary"></div>

@@ -4,12 +4,26 @@
 // renders an interactive bar chart using Chart.js.
 // ---------------------------------------------------------------------------
 
-const BMU_COLOURS = {
-  "T_MOWWO-1": "#2196F3",
-  "T_MOWWO-2": "#4CAF50",
-  "T_MOWWO-3": "#FF9800",
-  "T_MOWWO-4": "#9C27B0",
+// ---- Colour palettes (curated for contrast) ----
+const BMU_IDS = ["T_MOWWO-1", "T_MOWWO-2", "T_MOWWO-3", "T_MOWWO-4"];
+
+const PALETTES = {
+  default:    { name: "Default",    colours: ["#2196F3", "#4CAF50", "#FF9800", "#9C27B0"] },
+  ocean:      { name: "Ocean",      colours: ["#0077B6", "#00B4D8", "#023E8A", "#48CAE4"] },
+  earth:      { name: "Earth",      colours: ["#606C38", "#DDA15E", "#BC6C25", "#283618"] },
+  sunset:     { name: "Sunset",     colours: ["#E63946", "#F4A261", "#264653", "#2A9D8F"] },
+  berry:      { name: "Berry",      colours: ["#7B2D8E", "#D64045", "#E88D67", "#5438DC"] },
+  monochrome: { name: "Monochrome", colours: ["#222222", "#555555", "#888888", "#BBBBBB"] },
 };
+
+let activePalette = "default";
+
+function getBMUColours() {
+  const cols = PALETTES[activePalette].colours;
+  const map = {};
+  BMU_IDS.forEach((id, i) => { map[id] = cols[i]; });
+  return map;
+}
 
 // ---- User-defined reference lines ----
 // Each entry: { label, value (MW), colour }
@@ -30,6 +44,8 @@ const refAddBtn = document.getElementById("ref-add-btn");
 const refLabelInput = document.getElementById("ref-label");
 const refValueInput = document.getElementById("ref-value");
 const refColourInput = document.getElementById("ref-colour");
+const paletteSelect = document.getElementById("palette-select");
+const downloadBtn = document.getElementById("download-btn");
 
 // ---- Sensible defaults ----
 // Default: last 30 days (data has ~5-day lag so go back a bit further)
@@ -48,6 +64,8 @@ let chart = null;
 // ---- Event listeners ----
 fetchBtn.addEventListener("click", run);
 refAddBtn.addEventListener("click", addReferenceLine);
+paletteSelect.addEventListener("change", applyPalette);
+downloadBtn.addEventListener("click", downloadChart);
 
 // ---- Reference lines UI ----
 function renderRefLines() {
@@ -82,6 +100,26 @@ function addReferenceLine() {
 }
 
 renderRefLines();
+
+// ---- Palette UI ----
+function applyPalette() {
+  activePalette = paletteSelect.value;
+  if (!chart) return;
+  const colours = getBMUColours();
+  chart.data.datasets.forEach((ds) => {
+    if (colours[ds.label]) ds.backgroundColor = colours[ds.label];
+  });
+  chart.update();
+}
+
+// ---- Download chart as image ----
+function downloadChart() {
+  if (!chart) return;
+  const link = document.createElement("a");
+  link.download = "moray-west-chart.png";
+  link.href = chart.toBase64Image("image/png", 1);
+  link.click();
+}
 
 // ---- Main flow ----
 async function run() {
@@ -192,7 +230,7 @@ function processData(raw, agg, selectedBMUs) {
     return {
       label: bmu,
       data,
-      backgroundColor: BMU_COLOURS[bmu],
+      backgroundColor: getBMUColours()[bmu],
       stack: "combined",
     };
   });
