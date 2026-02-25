@@ -46,7 +46,8 @@ const refAddBtn = document.getElementById("ref-add-btn");
 const refLabelInput = document.getElementById("ref-label");
 const refValueInput = document.getElementById("ref-value");
 const refColourInput = document.getElementById("ref-colour");
-const paletteContainer = document.getElementById("palette-options");
+const paletteSelect = document.getElementById("palette-select");
+const palettePreview = document.getElementById("palette-preview");
 const downloadPngBtn = document.getElementById("download-png-btn");
 const downloadJpgBtn = document.getElementById("download-jpg-btn");
 
@@ -104,32 +105,37 @@ function addReferenceLine() {
 
 renderRefLines();
 
-// ---- Palette UI ----
+// ---- Palette UI (dropdown) ----
 function buildPaletteUI() {
-  paletteContainer.innerHTML = "";
+  paletteSelect.innerHTML = "";
   for (const [key, pal] of Object.entries(PALETTES)) {
-    const btn = document.createElement("button");
-    btn.className = "palette-btn" + (key === activePalette ? " active" : "");
-    btn.title = pal.name;
-    btn.dataset.key = key;
-    // Four colour swatches
-    btn.innerHTML = pal.colours
-      .map((c) => `<span class="pal-dot" style="background:${c}"></span>`)
-      .join("");
-    btn.addEventListener("click", () => {
-      activePalette = key;
-      paletteContainer.querySelectorAll(".palette-btn").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      if (!chart) return;
-      const colours = getBMUColours();
-      chart.data.datasets.forEach((ds) => {
-        if (colours[ds.label]) ds.backgroundColor = colours[ds.label];
-      });
-      chart.update();
-    });
-    paletteContainer.appendChild(btn);
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = pal.name;
+    if (key === activePalette) opt.selected = true;
+    paletteSelect.appendChild(opt);
   }
+  updatePalettePreview();
 }
+
+function updatePalettePreview() {
+  const pal = PALETTES[activePalette];
+  palettePreview.innerHTML = pal.colours
+    .map((c) => `<span class="pal-dot" style="background:${c}"></span>`)
+    .join("");
+}
+
+paletteSelect.addEventListener("change", () => {
+  activePalette = paletteSelect.value;
+  updatePalettePreview();
+  if (!chart) return;
+  const colours = getBMUColours();
+  chart.data.datasets.forEach((ds) => {
+    if (colours[ds.label]) ds.backgroundColor = colours[ds.label];
+  });
+  chart.update();
+});
+
 buildPaletteUI();
 
 // ---- Download chart as image ----
