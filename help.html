@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help — Moray West Grid Export Visualiser</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Help &amp; Documentation</h1>
+    <p class="subtitle"><a href="index.html" class="header-link">&larr; Back to visualiser</a></p>
+  </header>
+
+  <main>
+    <article class="help-content">
+
+      <!-- ============================================================ -->
+      <h2>About the data</h2>
+
+      <h3>Where does the data come from?</h3>
+      <p>
+        All data is fetched in real time from the
+        <a href="https://bmrs.elexon.co.uk" target="_blank" rel="noopener"><strong>Balancing Mechanism Reporting Service (BMRS)</strong></a>,
+        operated by <a href="https://www.elexon.co.uk" target="_blank" rel="noopener">Elexon</a> as part of the
+        Balancing and Settlement Code (BSC) for the GB electricity system. BMRS is publicly available and requires no
+        account or API key.
+      </p>
+
+      <h3>Which dataset is used?</h3>
+      <p>
+        The visualiser uses the <strong>B1610 — Actual Generation Output Per Generation Unit</strong> dataset
+        (<a href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/B1610/stream" target="_blank" rel="noopener">endpoint documentation</a>).
+        This reports the <em>actual metered volume</em> of electricity delivered to the grid by each registered
+        Balancing Mechanism Unit (BMU) in every settlement period.
+      </p>
+      <p>
+        B1610 is the correct dataset for measuring what a generator actually exported, as opposed to what it planned
+        to generate (Physical Notifications) or what it was instructed to adjust (Bid-Offer Acceptances).
+      </p>
+
+      <h3>What is Moray West?</h3>
+      <p>
+        Moray West is an offshore windfarm located in the Moray Firth, off the north-east coast of Scotland. It is
+        registered in BMRS under the lead party <strong>Moray Offshore Wind West Ltd</strong> and consists of four BMUs:
+      </p>
+      <table class="help-table">
+        <thead>
+          <tr><th>BMU ID</th><th>NGC BMU Name</th><th>Fuel Type</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>T_MOWWO-1</td><td>MOWWO-1</td><td>Wind</td></tr>
+          <tr><td>T_MOWWO-2</td><td>MOWWO-2</td><td>Wind</td></tr>
+          <tr><td>T_MOWWO-3</td><td>MOWWO-3</td><td>Wind</td></tr>
+          <tr><td>T_MOWWO-4</td><td>MOWWO-4</td><td>Wind</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The total farm output is the sum of all four BMUs. The farm became operational in 2024, so data before
+        mid-2024 will be sparse or absent.
+      </p>
+      <p>
+        <strong>Note:</strong> The adjacent Moray East windfarm (BMU IDs T_MOWEO-1 to T_MOWEO-3) is a separate asset
+        and is not included in this visualiser.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2>Key terms</h2>
+
+      <dl class="glossary">
+        <dt>BMU (Balancing Mechanism Unit)</dt>
+        <dd>
+          A registered unit in the GB Balancing Mechanism. Each BMU represents a distinct block of generation or
+          demand capacity. Moray West has four BMUs. You can search for any BMU at the
+          <a href="https://bmrs.elexon.co.uk/balancing-mechanism-bmu-view" target="_blank" rel="noopener">BMRS BMU View</a>.
+        </dd>
+
+        <dt>Settlement Period</dt>
+        <dd>
+          The GB electricity market operates in half-hour blocks called settlement periods. There are 48 per day
+          (occasionally 46 or 50 on clock-change days). Each settlement period is numbered 1 to 48.
+        </dd>
+
+        <dt>MWh (Megawatt-hour)</dt>
+        <dd>
+          A unit of <em>energy</em> — the total amount of electricity produced or consumed over a period of time.
+          The B1610 dataset reports values in MWh per settlement period.
+        </dd>
+
+        <dt>MW (Megawatt)</dt>
+        <dd>
+          A unit of <em>power</em> — the rate at which energy is being produced at any given moment. This visualiser
+          converts MWh to average MW so that output can be compared against capacity benchmarks.
+        </dd>
+
+        <dt>MWh to MW conversion</dt>
+        <dd>
+          <strong>Per settlement period:</strong> Average MW = MWh &divide; 0.5 (since each period is half an hour).<br>
+          <strong>Daily average:</strong> Average MW = total daily MWh &divide; 24.<br>
+          <strong>Weekly average:</strong> Average MW = total weekly MWh &divide; (number of hours in the week).
+        </dd>
+
+        <dt>B1610</dt>
+        <dd>
+          The BMRS dataset identifier for "Actual Generation Output Per Generation Unit". It contains the metered
+          energy output for every registered BMU.
+          <a href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/B1610" target="_blank" rel="noopener">Endpoint documentation</a>.
+        </dd>
+
+        <dt>BMRS (Balancing Mechanism Reporting Service)</dt>
+        <dd>
+          The platform operated by Elexon that publishes operational data about the GB electricity system.
+          Available at <a href="https://bmrs.elexon.co.uk" target="_blank" rel="noopener">bmrs.elexon.co.uk</a>.
+        </dd>
+
+        <dt>Elexon / BSC</dt>
+        <dd>
+          Elexon administers the Balancing and Settlement Code (BSC), which governs the rules for balancing
+          electricity supply and demand in Great Britain and settling the associated costs.
+          <a href="https://www.elexon.co.uk" target="_blank" rel="noopener">elexon.co.uk</a>.
+        </dd>
+      </dl>
+
+      <!-- ============================================================ -->
+      <h2>How to use the visualiser</h2>
+
+      <h3>1. Select a date range</h3>
+      <p>
+        Use the <strong>From</strong> and <strong>To</strong> date pickers to set the period you want to view.
+        The defaults are set to the last 30 days (offset by 5 days to account for data publication lag). Moray West
+        data is available from mid-2024 onwards.
+      </p>
+
+      <h3>2. Choose which BMUs to include</h3>
+      <p>
+        The four BMU checkboxes let you toggle individual units on or off. When all four are selected, the chart
+        shows the total farm output as a stacked bar. Deselecting a BMU removes its contribution from the chart,
+        which is useful for comparing individual unit performance.
+      </p>
+
+      <h3>3. Set the aggregation level</h3>
+      <p>
+        The <strong>Aggregation</strong> dropdown controls how the data is grouped:
+      </p>
+      <ul>
+        <li><strong>Per Settlement Period (30 min)</strong> — one bar per half-hour interval. Best for viewing the
+          generation profile of a single day or a few days. MWh is divided by 0.5 to give average MW.</li>
+        <li><strong>Daily Average</strong> — one bar per day. Total daily MWh is divided by 24 to give the daily
+          average power in MW. Good for viewing weeks or months at a glance.</li>
+        <li><strong>Weekly Average</strong> — one bar per week (grouped by week commencing Monday). Useful for
+          longer-term trends over several months.</li>
+      </ul>
+
+      <h3>4. Fetch the data</h3>
+      <p>
+        Click <strong>Fetch &amp; Visualise</strong> to call the BMRS API and render the chart. The status bar below
+        the chart will show progress and the number of records returned.
+      </p>
+
+      <h3>5. Add reference lines</h3>
+      <p>
+        Use the <strong>Reference Lines</strong> panel to add horizontal lines at any MW value. For each line you
+        can set:
+      </p>
+      <ul>
+        <li><strong>Label</strong> — a description (e.g. "Installed Capacity", "90% Contractual Capacity")</li>
+        <li><strong>MW value</strong> — the power level for the line (e.g. 882, 315)</li>
+        <li><strong>Colour</strong> — click the colour swatch to pick any colour</li>
+      </ul>
+      <p>
+        Click <strong>Add Line</strong> to add it. Lines appear immediately on the chart as dashed horizontal lines.
+        Click the <strong>&times;</strong> on any line's tag to remove it.
+      </p>
+      <p>
+        A default line at 315 MW (90% of contractual capacity) is included as a starting point but can be removed.
+      </p>
+
+      <h3>6. Read the chart</h3>
+      <p>
+        The chart is a stacked bar chart — each colour represents one BMU, and the total bar height is the combined
+        output. Hover over any bar to see a tooltip with the per-BMU and total MW values for that period.
+      </p>
+      <p>
+        Below the chart, a summary line shows:
+      </p>
+      <ul>
+        <li><strong>Total energy</strong> — the sum of all MWh across the selected period and BMUs</li>
+        <li><strong>Peak avg MW</strong> — the highest bar value in the chart</li>
+        <li><strong>Mean avg MW</strong> — the average of all bar values</li>
+        <li><strong>Records</strong> — the number of raw data records returned by the API</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>Data caveats</h2>
+      <ul>
+        <li><strong>~5 day lag:</strong> B1610 data is published approximately five days after the operational period.
+          It is not suitable for near-real-time monitoring.</li>
+        <li><strong>Settlement run updates:</strong> Values may change slightly as later settlement runs replace the
+          initial data. The most recent data reflects the latest available settlement run.</li>
+        <li><strong>Raw units are MWh, not MW:</strong> The API returns energy (MWh) per settlement period. This
+          visualiser converts to average MW for display. See the glossary above for the conversion method.</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2>Useful links</h2>
+      <table class="help-table">
+        <tbody>
+          <tr>
+            <td>BMRS home page</td>
+            <td><a href="https://bmrs.elexon.co.uk" target="_blank" rel="noopener">bmrs.elexon.co.uk</a></td>
+          </tr>
+          <tr>
+            <td>BMU search tool</td>
+            <td><a href="https://bmrs.elexon.co.uk/balancing-mechanism-bmu-view" target="_blank" rel="noopener">bmrs.elexon.co.uk/balancing-mechanism-bmu-view</a></td>
+          </tr>
+          <tr>
+            <td>API documentation</td>
+            <td><a href="https://bmrs.elexon.co.uk/api-documentation" target="_blank" rel="noopener">bmrs.elexon.co.uk/api-documentation</a></td>
+          </tr>
+          <tr>
+            <td>B1610 endpoint docs</td>
+            <td><a href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/B1610" target="_blank" rel="noopener">bmrs.elexon.co.uk/…/B1610</a></td>
+          </tr>
+          <tr>
+            <td>B1610/stream endpoint docs</td>
+            <td><a href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/B1610/stream" target="_blank" rel="noopener">bmrs.elexon.co.uk/…/B1610/stream</a></td>
+          </tr>
+          <tr>
+            <td>Elexon corporate site</td>
+            <td><a href="https://www.elexon.co.uk" target="_blank" rel="noopener">elexon.co.uk</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </article>
+  </main>
+
+  <footer>
+    <p>Data source: <a href="https://bmrs.elexon.co.uk" target="_blank" rel="noopener">Elexon BMRS</a> — B1610 Actual Generation Output Per Generation Unit.</p>
+  </footer>
+</body>
+</html>
