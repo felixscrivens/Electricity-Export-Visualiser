@@ -11,7 +11,11 @@ const BMU_COLOURS = {
   "T_MOWWO-4": "#9C27B0",
 };
 
-const CAPACITY_LINE_MW = 315; // 90% of 350 MW contractual capacity
+// ---- User-defined reference lines ----
+// Each entry: { label, value (MW), colour }
+const referenceLines = [
+  { label: "90% Contractual Capacity", value: 315, colour: "#e74c3c" },
+];
 
 // ---- DOM refs ----
 const dateFrom = document.getElementById("date-from");
@@ -21,6 +25,11 @@ const fetchBtn = document.getElementById("fetch-btn");
 const statusEl = document.getElementById("status");
 const summaryEl = document.getElementById("summary");
 const bmuCheckboxes = document.querySelectorAll('.bmu-toggles input[type="checkbox"]');
+const refLinesList = document.getElementById("ref-lines-list");
+const refAddBtn = document.getElementById("ref-add-btn");
+const refLabelInput = document.getElementById("ref-label");
+const refValueInput = document.getElementById("ref-value");
+const refColourInput = document.getElementById("ref-colour");
 
 // ---- Sensible defaults ----
 // Default: last 30 days (data has ~5-day lag so go back a bit further)
@@ -36,8 +45,43 @@ dateTo.value = fmtDate(defaultTo);
 // ---- Chart instance ----
 let chart = null;
 
-// ---- Event listener ----
+// ---- Event listeners ----
 fetchBtn.addEventListener("click", run);
+refAddBtn.addEventListener("click", addReferenceLine);
+
+// ---- Reference lines UI ----
+function renderRefLines() {
+  refLinesList.innerHTML = "";
+  referenceLines.forEach((line, i) => {
+    const tag = document.createElement("span");
+    tag.className = "ref-line-tag";
+    tag.innerHTML =
+      `<span class="swatch" style="background:${line.colour}"></span>` +
+      `${line.label} (${line.value} MW)` +
+      `<button title="Remove">&times;</button>`;
+    tag.querySelector("button").addEventListener("click", () => {
+      referenceLines.splice(i, 1);
+      renderRefLines();
+      if (chart) chart.update();
+    });
+    refLinesList.appendChild(tag);
+  });
+}
+
+function addReferenceLine() {
+  const label = refLabelInput.value.trim();
+  const value = parseFloat(refValueInput.value);
+  const colour = refColourInput.value;
+  if (!label) { refLabelInput.focus(); return; }
+  if (isNaN(value) || value < 0) { refValueInput.focus(); return; }
+  referenceLines.push({ label, value, colour });
+  refLabelInput.value = "";
+  refValueInput.value = "";
+  renderRefLines();
+  if (chart) chart.update();
+}
+
+renderRefLines();
 
 // ---- Main flow ----
 async function run() {
@@ -244,32 +288,34 @@ function renderChart(labels, datasets, agg) {
         },
       },
     },
-    plugins: [capacityLinePlugin],
+    plugins: [refLinesPlugin],
   });
 }
 
-// Custom plugin: draw 315 MW reference line
-const capacityLinePlugin = {
-  id: "capacityLine",
+// Custom plugin: draw all user-defined reference lines
+const refLinesPlugin = {
+  id: "refLines",
   afterDraw(chart) {
     const yScale = chart.scales.y;
-    if (CAPACITY_LINE_MW > yScale.max) return; // don't draw if off-screen
-    const y = yScale.getPixelForValue(CAPACITY_LINE_MW);
     const ctx = chart.ctx;
-    ctx.save();
-    ctx.strokeStyle = "#e74c3c";
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 4]);
-    ctx.beginPath();
-    ctx.moveTo(chart.chartArea.left, y);
-    ctx.lineTo(chart.chartArea.right, y);
-    ctx.stroke();
-    // Label
-    ctx.fillStyle = "#e74c3c";
-    ctx.font = "bold 11px sans-serif";
-    ctx.textAlign = "left";
-    ctx.fillText("90% Contractual Capacity (315 MW)", chart.chartArea.left + 6, y - 6);
-    ctx.restore();
+    for (const line of referenceLines) {
+      if (line.value > yScale.max) continue; // off-screen
+      const y = yScale.getPixelForValue(line.value);
+      ctx.save();
+      ctx.strokeStyle = line.colour;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 4]);
+      ctx.beginPath();
+      ctx.moveTo(chart.chartArea.left, y);
+      ctx.lineTo(chart.chartArea.right, y);
+      ctx.stroke();
+      // Label
+      ctx.fillStyle = line.colour;
+      ctx.font = "bold 11px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(`${line.label} (${line.value} MW)`, chart.chartArea.left + 6, y - 6);
+      ctx.restore();
+    }
   },
 };
 

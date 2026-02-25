@@ -129,6 +129,112 @@ main {
   cursor: not-allowed;
 }
 
+/* --- Reference lines panel --- */
+.ref-lines-panel {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.ref-lines-panel h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #555;
+  margin-bottom: 0.6rem;
+}
+
+.ref-line-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ref-line-add input[type="text"],
+.ref-line-add input[type="number"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.ref-line-add input[type="text"] {
+  width: 180px;
+}
+
+.ref-line-add input[type="number"] {
+  width: 90px;
+}
+
+.ref-line-add input[type="color"] {
+  width: 36px;
+  height: 32px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+#ref-add-btn {
+  padding: 0.4rem 1rem;
+  background: #0f3460;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#ref-add-btn:hover {
+  background: #1a508b;
+}
+
+#ref-lines-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.ref-line-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+}
+
+.ref-line-tag .swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.ref-line-tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: #888;
+  padding: 0 0.1rem;
+}
+
+.ref-line-tag button:hover {
+  color: #c0392b;
+}
+
 /* --- Chart area --- */
 .chart-area {
   background: #fff;

@@ -45,6 +45,17 @@
       <button id="fetch-btn">Fetch &amp; Visualise</button>
     </section>
 
+    <section class="ref-lines-panel">
+      <h2>Reference Lines</h2>
+      <div id="ref-lines-list"></div>
+      <div class="ref-line-add">
+        <input type="text" id="ref-label" placeholder="Label" maxlength="60">
+        <input type="number" id="ref-value" placeholder="MW" step="any" min="0">
+        <input type="color" id="ref-colour" value="#e74c3c">
+        <button id="ref-add-btn">Add Line</button>
+      </div>
+    </section>
+
     <section class="chart-area">
       <div class="chart-container">
         <canvas id="main-chart"></canvas>
