@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moray West Windfarm — Grid Export Visualiser</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Moray West Windfarm — Grid Export Visualiser</h1>
+    <p class="subtitle">Actual metered generation output (B1610) from the Elexon BMRS API</p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <div class="control-group">
+        <label for="date-from">From</label>
+        <input type="date" id="date-from">
+      </div>
+      <div class="control-group">
+        <label for="date-to">To</label>
+        <input type="date" id="date-to">
+      </div>
+
+      <div class="control-group">
+        <label>Aggregation</label>
+        <select id="aggregation">
+          <option value="settlement">Per Settlement Period (30 min)</option>
+          <option value="daily" selected>Daily Average</option>
+          <option value="weekly">Weekly Average</option>
+        </select>
+      </div>
+
+      <fieldset class="control-group bmu-toggles">
+        <legend>BMUs</legend>
+        <label><input type="checkbox" value="T_MOWWO-1" checked> T_MOWWO-1</label>
+        <label><input type="checkbox" value="T_MOWWO-2" checked> T_MOWWO-2</label>
+        <label><input type="checkbox" value="T_MOWWO-3" checked> T_MOWWO-3</label>
+        <label><input type="checkbox" value="T_MOWWO-4" checked> T_MOWWO-4</label>
+      </fieldset>
+
+      <button id="fetch-btn">Fetch &amp; Visualise</button>
+    </section>
+
+    <section class="chart-area">
+      <div class="chart-container">
+        <canvas id="main-chart"></canvas>
+      </div>
+      <div id="status" class="status"></div>
+      <div id="summary" class="summary"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data source: <a href="https://bmrs.elexon.co.uk" target="_blank" rel="noopener">Elexon BMRS</a> — B1610 Actual Generation Output Per Generation Unit.
+      Values converted from MWh to MW. Data is published ~5 days after the operational period.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
